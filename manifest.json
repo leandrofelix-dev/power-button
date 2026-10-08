@@ -1,0 +1,45 @@
+{
+  "id": "power-button",
+  "name": "Shut Down",
+  "version": "0.1.0",
+  "author": "Felix \u003cfelix@local\u003e",
+  "description": "Shut Down is a Ryoku shell plugin.",
+  "license": "MIT",
+  "official": false,
+  "hosts": [
+    "topbarGlyph"
+  ],
+  "entryPoints": {
+    "main": "service/Main.qml",
+    "content": "content/Widget.qml",
+    "panel": "content/Panel.qml"
+  },
+  "panel": {
+    "width": 320
+  },
+  "files": [],
+  "capabilities": {
+    "densities": [
+      "glyph",
+      "compact"
+    ]
+  },
+  "defaults": {
+    "host": "topbarGlyph",
+    "label": "Shut Down"
+  },
+  "dependencies": {
+    "commands": []
+  },
+  "metadata": {
+    "settings": [
+      {
+        "key": "showCount",
+        "type": "toggle",
+        "label": "Show the tick count",
+        "group": "Shut Down",
+        "default": true
+      }
+    ]
+  }
+}
