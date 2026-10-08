@@ -1,9 +1,9 @@
 {
   "id": "power-button",
-  "name": "Shut Down",
-  "version": "0.1.0",
-  "author": "Felix \u003cfelix@local\u003e",
-  "description": "Shut Down is a Ryoku shell plugin.",
+  "name": "Session",
+  "version": "0.2.1",
+  "author": "Felix <eu@leandrofelix.dev.br>",
+  "description": "Session menu on the QS Bar: shut down, reboot, hibernate, or lock via ryoku-shell.",
   "license": "MIT",
   "official": false,
   "hosts": [
@@ -15,31 +15,29 @@
     "panel": "content/Panel.qml"
   },
   "panel": {
-    "width": 320
+    "width": 300
   },
-  "files": [],
+  "files": [
+    "content/I18n.qml",
+    "assets/preview-widget.png"
+  ],
   "capabilities": {
     "densities": [
       "glyph",
-      "compact"
+      "full"
     ]
   },
   "defaults": {
     "host": "topbarGlyph",
-    "label": "Shut Down"
+    "label": "Session"
   },
   "dependencies": {
-    "commands": []
+    "commands": [
+      "systemctl",
+      "ryoku-shell"
+    ]
   },
   "metadata": {
-    "settings": [
-      {
-        "key": "showCount",
-        "type": "toggle",
-        "label": "Show the tick count",
-        "group": "Shut Down",
-        "default": true
-      }
-    ]
+    "settings": []
   }
 }

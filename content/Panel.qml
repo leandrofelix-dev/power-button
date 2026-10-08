@@ -1,67 +1,153 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
+import Ryoku.PluginKit
 import Ryoku.PluginKit.Singletons
 
-// content/Panel.qml is the bar panel: when this plugin is on the bar and the
-// manifest declares entryPoints.panel, the host renders this file under the
-// plugin's glyph in the shared panel surface (Escape or an outside click closes
-// it, one panel open at a time). The host sets pluginApi, density ("full"), s,
-// widthBudget (from manifest panel.width) and active; report implicitHeight and
-// the host sizes the card to it.
+// Session menu. Host PluginPanel anchors the card under the glyph (no placement
+// API for a true screen-center modal); Escape / click-outside dismiss via host.
 Item {
     id: root
 
     property var pluginApi
     property string density: "full"
     property real s: 1
-    property real widthBudget: 320
+    property real widthBudget: 300
     property bool active: false
 
     readonly property var service: pluginApi ? pluginApi.mainInstance : null
-    readonly property int count: service ? service.count : 0
+    readonly property real w: widthBudget > 0 ? widthBudget : 300
 
-    implicitWidth: root.widthBudget
-    implicitHeight: col.implicitHeight + 24 * root.s
+    implicitWidth: root.w
+    implicitHeight: col.implicitHeight
+
+    I18n {
+        id: i18n
+    }
+
+    function run(action) {
+        if (!root.service)
+            return;
+        if (action === "powerOff")
+            root.service.powerOff();
+        else if (action === "reboot")
+            root.service.reboot();
+        else if (action === "hibernate")
+            root.service.hibernate();
+        else if (action === "lock")
+            root.service.lock();
+        if (root.pluginApi)
+            root.pluginApi.closePanel();
+    }
+
+    // Full-width action row: GlyphIcon + label (native session glyphs).
+    component ActionRow: Rectangle {
+        id: row
+        property string label: ""
+        property string icon: ""
+        property bool danger: false
+        signal tapped()
+
+        width: parent ? parent.width : 0
+        implicitHeight: 34 * root.s
+        radius: 0
+        color: rowHover.hovered
+            ? (row.danger ? Qt.rgba(Theme.sun.r, Theme.sun.g, Theme.sun.b, 0.14) : Theme.sheen)
+            : "transparent"
+        border.width: 1
+        border.color: row.danger
+            ? (rowHover.hovered ? Theme.sun : Theme.lineStrong)
+            : (rowHover.hovered ? Theme.lineStrong : Theme.border)
+        Behavior on color { ColorAnimation { duration: 120 } }
+        Behavior on border.color { ColorAnimation { duration: 120 } }
+
+        Row {
+            anchors.left: parent.left
+            anchors.leftMargin: 12 * root.s
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 10 * root.s
+
+            GlyphIcon {
+                anchors.verticalCenter: parent.verticalCenter
+                width: 15 * root.s
+                height: 15 * root.s
+                name: row.icon
+                color: row.danger ? Theme.sun : (rowHover.hovered ? Theme.cream : Theme.iconDim)
+                stroke: 1.8
+                Behavior on color { ColorAnimation { duration: 120 } }
+            }
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: row.label
+                color: row.danger ? Theme.sun : Theme.cream
+                font.family: Theme.mono
+                font.pixelSize: 11 * root.s
+                font.weight: Font.DemiBold
+                font.letterSpacing: 1.2 * root.s
+            }
+        }
+
+        HoverHandler {
+            id: rowHover
+            cursorShape: Qt.PointingHandCursor
+        }
+
+        TapHandler {
+            onTapped: row.tapped()
+        }
+    }
 
     Column {
         id: col
-        x: 12 * root.s
-        y: 12 * root.s
-        width: root.width - 24 * root.s
-        spacing: 10 * root.s
+        width: root.w
+        spacing: 12 * root.s
 
         Text {
-            text: "Demo plugin"
-            color: Theme.bright
-            font.family: Theme.display
-            font.pixelSize: 16 * root.s
-        }
-
-        Text {
-            text: "Ticks: " + root.count
-            color: Theme.dim
-            font.family: Theme.font
+            width: parent.width
+            text: i18n.tr("Session")
+            color: Theme.cream
+            font.family: Theme.mono
             font.pixelSize: 13 * root.s
+            font.weight: Font.DemiBold
+            font.letterSpacing: 2.4 * root.s
+            font.capitalization: Font.AllUppercase
         }
 
         Rectangle {
-            width: resetLabel.implicitWidth + 24 * root.s
-            height: resetLabel.implicitHeight + 12 * root.s
-            radius: Theme.radius
-            color: resetArea.pressed ? Theme.vermDeep : Theme.accent
+            width: parent.width
+            height: 1
+            color: Theme.hair
+        }
 
-            Text {
-                id: resetLabel
-                anchors.centerIn: parent
-                text: "RESET"
-                color: Theme.cardBot
-                font.family: Theme.font
-                font.pixelSize: 12 * root.s
+        Column {
+            width: parent.width
+            spacing: 6 * root.s
+
+            ActionRow {
+                label: i18n.tr("Shut Down")
+                icon: "shutdown"
+                danger: true
+                onTapped: root.run("powerOff")
             }
 
-            MouseArea {
-                id: resetArea
-                anchors.fill: parent
-                onClicked: if (root.service) root.service.reset()
+            ActionRow {
+                label: i18n.tr("Restart")
+                icon: "reboot"
+                onTapped: root.run("reboot")
+            }
+
+            ActionRow {
+                // GlyphKit has no "hibernate"; "suspend" is the sleep/moon mark.
+                label: i18n.tr("Hibernate")
+                icon: "suspend"
+                onTapped: root.run("hibernate")
+            }
+
+            ActionRow {
+                label: i18n.tr("Lock screen")
+                icon: "lock"
+                onTapped: root.run("lock")
             }
         }
     }

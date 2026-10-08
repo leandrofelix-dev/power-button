@@ -7,11 +7,10 @@ need any other document to work here.
 
 ## The rules
 
-R1  Place. A plugin is one folder named after its id. Author it under
-`$(xdg-user-dir DOCUMENTS)/ryoku-plugins/<id>/` (fallback `~/ryoku-plugins/<id>/`);
-`ryoku plugin new <id>` creates it there. Never write into
-`~/.local/share/ryoku/plugins/` (the store's install root, receipt-owned) or
-`~/.config/quickshell/` (the shipped shell).
+R1  Place. A plugin is one folder named after its id. For this plugin the
+canonical authoring path is `/home/felix/Work/power-button/` (not the store
+install root). Never write into `~/.local/share/ryoku/plugins/` (receipt-owned)
+or `~/.config/quickshell/` (the shipped shell).
 
 R2  Shape. `manifest.json` at the root; `service/Main.qml` (logic, no UI);
 `content/Widget.qml` (the one view); optional `content/Panel.qml` (a bar panel);

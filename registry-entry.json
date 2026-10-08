@@ -1,0 +1,27 @@
+{
+  "id": "power-button",
+  "name": "Session",
+  "version": "0.2.1",
+  "path": "plugins/power-button",
+  "author": "Felix <eu@leandrofelix.dev.br>",
+  "summary": "Session menu on the QS Bar.",
+  "description": "Session menu on the QS Bar: shut down, reboot, hibernate, or lock via ryoku-shell.",
+  "tags": [
+    "bar-widget"
+  ],
+  "accent": "#8f8378",
+  "surface": "#101010",
+  "preview": "assets/preview-widget.png",
+  "screenshots": [
+    "assets/preview-widget.png"
+  ],
+  "manifest": "product-manifest.json",
+  "manifestSha256": "784fd794d2b6c7a4046e66a954fcdb9e3542a2d39a8a5e19a8bc03dad560b6c3",
+  "official": false,
+  "tagline": "Session menu on the QS Bar.",
+  "icon": "",
+  "hosts": [
+    "topbarGlyph"
+  ],
+  "lastUpdated": "2026-10-08"
+}

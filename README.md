@@ -1,51 +1,47 @@
-# Shut Down
+# Session
 
-A Ryoku shell plugin (`power-button`). This scaffold is a working demo: a counter that
-ticks once a second, a mark on the bar, and a panel with a RESET button. Edit it
-into your own widget.
+Bar glyph that opens a session menu: shut down, reboot, hibernate, or lock.
 
 ## What it does
 
-- **Service** (`service/Main.qml`): the logic, no UI. Holds the live state the
-  views read through `pluginApi.mainInstance`.
-- **Widget** (`content/Widget.qml`): the one view the host mounts. A left click
-  toggles the panel; it never changes state.
-- **Panel** (`content/Panel.qml`): the bar panel the host renders under the
-  glyph when this plugin is on the bar.
+- **Widget** — power icon on the QS Bar; click opens the session panel.
+- **Panel** — Shut Down, Restart, Hibernate, Lock screen (labels follow the
+  system locale; English + Portuguese ship in `content/I18n.qml`).
+  Host dismisses on Escape or click outside the card.
+- **Service** — `systemctl poweroff|reboot|hibernate` and `ryoku-shell lock`
+  (same lock path as Super+L / native quick settings).
+
+## Panel placement
+
+Ryoku’s `PluginPanel` always anchors the card under the bar glyph. There is no
+manifest or host API for a screen-centered modal. This plugin uses a compact
+session list inside that host card; dismiss is the host’s full-screen
+click-outside layer.
 
 ## What it reads and writes
 
-The demo reads nothing off the machine and writes nothing. When you add real
-behaviour, keep to the rules in `AGENTS.md`: read settings through
-`pluginApi.pluginSettings` behind a default, write them only through
-`pluginApi.saveSetting(key, value)`, and write files only under
-`pluginApi.stateDir`. Every external command belongs in `bin/` or in
-`dependencies.commands`; every host you contact belongs in
-`capabilities.network`; a privileged action runs only through `pkexec` listed in
-`capabilities.privileged`.
+Reads nothing. Writes nothing under the plugin state dir. On action it runs one
+of the commands in `dependencies.commands`.
 
 ## Settings
 
-| key       | type   | default | description         |
-| --------- | ------ | ------- | ------------------- |
-| showCount | toggle | true    | Show the tick count |
+None.
 
 ## Preview
 
-Capture a real screenshot of the widget and save it as
-`assets/preview-widget.png`, then list it under `files` in `manifest.json`. The
-store shows it in the catalogue.
+`assets/preview-widget.png`
 
-## Build, check, install
+## Source
+
+Canonical source: `/home/felix/Work/power-button/`
+
+## Install
 
 ```
-ryoku plugin validate .
-ryoku plugin add . --bar --yes
+ryoku plugin validate /home/felix/Work/power-button
+ryoku plugin add /home/felix/Work/power-button --bar --yes
 ```
-
-It lists under **Community** in QS Bar Settings. Publish it only when you want
-to share it: `ryoku plugin share power-button`.
 
 ## Author
 
-Felix <felix@local>: this plugin is community-made (`official` is false).
+Felix <eu@leandrofelix.dev.br>: community plugin (`official` is false).

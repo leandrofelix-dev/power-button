@@ -1,11 +1,10 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
+import Ryoku.PluginKit
 import Ryoku.PluginKit.Singletons
 
-// content/Widget.qml is the one view the host mounts (on the bar, this is the
-// glyph). It reads live state from the service (pluginApi.mainInstance) and its
-// only click action toggles the plugin's panel: a widget click NEVER mutates
-// anything. The host sets pluginApi, density, s, widthBudget and active; read
-// them, never assign.
+// Bar glyph. Click opens the session menu panel (never runs an action directly).
 Item {
     id: root
 
@@ -16,41 +15,40 @@ Item {
     property real s: 1
     property real widthBudget: 0
 
-    readonly property var service: pluginApi ? pluginApi.mainInstance : null
-    readonly property int count: service ? service.count : 0
+    readonly property bool panelOpen: pluginApi ? pluginApi.panelOpen : false
+    readonly property bool lit: root.panelOpen || hover.hovered
 
-    implicitWidth: row.implicitWidth
-    implicitHeight: Math.max(row.implicitHeight, 18 * root.s)
+    implicitWidth: 22 * root.s
+    implicitHeight: 22 * root.s
 
-    Row {
-        id: row
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: 6 * root.s
-
-        // The plugin's mark. Tint it with the themed accent so it follows the
-        // active palette (Theme resolves colour from the system scheme).
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: "\u25C6"
-            color: root.active ? Theme.accent : Theme.dim
-            font.family: Theme.mono
-            font.pixelSize: 13 * root.s
-        }
-
-        // The label beside the mark, elided to the width the host allows.
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: root.count
-            color: Theme.bright
-            font.family: Theme.font
-            font.pixelSize: 13 * root.s
-            elide: Text.ElideRight
-            width: root.widthBudget > 0 ? Math.min(implicitWidth, root.widthBudget) : implicitWidth
-        }
+    // Quiet hover plate — same dossier language as native pill glyphs.
+    Rectangle {
+        anchors.centerIn: parent
+        width: 20 * root.s
+        height: 20 * root.s
+        radius: 0
+        color: root.lit ? Theme.sheen : "transparent"
+        border.width: root.panelOpen ? 1 : 0
+        border.color: Theme.hair
+        Behavior on color { ColorAnimation { duration: 120 } }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: if (root.pluginApi) root.pluginApi.togglePanel()
+    GlyphIcon {
+        anchors.centerIn: parent
+        width: 15 * root.s
+        height: 15 * root.s
+        name: "shutdown"
+        color: root.panelOpen ? Theme.accent : (hover.hovered ? Theme.cream : Theme.iconDim)
+        stroke: 1.8
+        Behavior on color { ColorAnimation { duration: 120 } }
+    }
+
+    HoverHandler {
+        id: hover
+        cursorShape: Qt.PointingHandCursor
+    }
+
+    TapHandler {
+        onTapped: if (root.pluginApi) root.pluginApi.togglePanel()
     }
 }
