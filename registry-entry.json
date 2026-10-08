@@ -1,12 +1,14 @@
 {
   "id": "power-button",
   "name": "Session",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "path": "plugins/power-button",
   "author": "Felix <eu@leandrofelix.dev.br>",
-  "summary": "Session menu on the QS Bar.",
+  "summary": "Session menu on the QS Bar: shut down, reboot, hibernate, or lock.",
   "description": "Session menu on the QS Bar: shut down, reboot, hibernate, or lock via ryoku-shell.",
   "tags": [
+    "session",
+    "power",
     "bar-widget"
   ],
   "accent": "#8f8378",
@@ -16,12 +18,13 @@
     "assets/preview-widget.png"
   ],
   "manifest": "product-manifest.json",
-  "manifestSha256": "784fd794d2b6c7a4046e66a954fcdb9e3542a2d39a8a5e19a8bc03dad560b6c3",
+  "manifestSha256": "b8460b8499a0c361bc043a838cdf8255a474ae91b1073a9a9cfe7dfb5327ff96",
   "official": false,
-  "tagline": "Session menu on the QS Bar.",
-  "icon": "",
+  "tagline": "Session menu on the QS Bar: shut down, reboot, hibernate, or lock.",
+  "icon": "power_settings_new",
   "hosts": [
     "topbarGlyph"
   ],
-  "lastUpdated": "2026-10-08"
+  "lastUpdated": "2026-10-08",
+  "upstream": "https://github.com/leandrofelix-dev/power-button"
 }

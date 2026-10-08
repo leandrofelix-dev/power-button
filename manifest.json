@@ -1,11 +1,16 @@
 {
   "id": "power-button",
   "name": "Session",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Felix <eu@leandrofelix.dev.br>",
   "description": "Session menu on the QS Bar: shut down, reboot, hibernate, or lock via ryoku-shell.",
   "license": "MIT",
   "official": false,
+  "tags": [
+    "session",
+    "power",
+    "bar-widget"
+  ],
   "hosts": [
     "topbarGlyph"
   ],
@@ -29,6 +34,7 @@
   },
   "defaults": {
     "host": "topbarGlyph",
+    "icon": "power_settings_new",
     "label": "Session"
   },
   "dependencies": {
